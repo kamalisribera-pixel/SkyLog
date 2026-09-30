@@ -3,9 +3,11 @@ from fastapi import FastAPI
 from app.database.database import engine
 from app.database.models import Base
 from app.routers.auth import router as auth_router
+from app.routers.dashboard import router as dashboard_router
 
 from app.routers.aircraft import router as aircraft_router
 Base.metadata.create_all(bind=engine)
+from app.routers.flights import router as flight_router
 
 app = FastAPI(
     title="SkyLog API",
@@ -14,6 +16,8 @@ app = FastAPI(
 )
 app.include_router(auth_router)
 app.include_router(aircraft_router)
+app.include_router(flight_router)
+app.include_router(dashboard_router)
 
 @app.get("/")
 def root():

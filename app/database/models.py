@@ -6,6 +6,18 @@ from app.database.database import Base
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    DateTime,
+    Date,
+    Float,
+    Text,
+    ForeignKey
+)
+from datetime import datetime
+
 class User(Base):
     __tablename__ = "users"
 
@@ -45,4 +57,40 @@ class Aircraft(Base):
         Integer,
         ForeignKey("users.user_id"),
         nullable=False
+    )
+
+class Flight(Base):
+    __tablename__ = "flights"
+
+    flight_id = Column(Integer, primary_key=True, index=True)
+
+    owner_id = Column(
+        Integer,
+        ForeignKey("users.user_id"),
+        nullable=False
+    )
+
+    aircraft_id = Column(
+        Integer,
+        ForeignKey("aircraft.aircraft_id"),
+        nullable=False
+    )
+
+    flight_date = Column(Date, nullable=False)
+
+    departure_airport = Column(String, nullable=False)
+
+    arrival_airport = Column(String, nullable=False)
+
+    flight_time = Column(Float, nullable=False)
+
+    landings = Column(Integer, nullable=False)
+
+    day_night = Column(String, nullable=False)
+
+    remarks = Column(Text)
+
+    created_at = Column(
+        DateTime(timezone=True),
+        default=datetime.utcnow
     )
