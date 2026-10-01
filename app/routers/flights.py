@@ -1,9 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
 from app.database.models import Flight, Aircraft
-from app.schemas.flight import FlightCreate
+from app.schemas.flight import (
+    FlightCreate,
+    FlightResponse,
+    FlightListResponse
+)
 from app.auth.dependencies import get_current_user
 
 router = APIRouter(
@@ -14,6 +18,7 @@ router = APIRouter(
 
 @router.post(
     "/",
+    response_model=FlightResponse,
     status_code=status.HTTP_201_CREATED
 )
 def create_flight(
@@ -56,11 +61,26 @@ def create_flight(
     return flight
 
 
-@router.get("/")
+@router.get(
+    "/",
+    response_model=FlightListResponse
+)
 def get_flights(
+    page: int = Query(default=1, ge=1),
+    size: int = Query(default=10, ge=1, le=100),
     db: Session = Depends(get_db),
     current_user: int = Depends(get_current_user)
 ):
+
+    offset = (page - 1) * size
+
+    total_flights = (
+        db.query(Flight)
+        .filter(
+            Flight.owner_id == current_user
+        )
+        .count()
+    )
 
     flights = (
         db.query(Flight)
@@ -70,13 +90,24 @@ def get_flights(
         .order_by(
             Flight.flight_date.desc()
         )
+        .offset(offset)
+        .limit(size)
         .all()
     )
 
-    return flights
+    return {
+        "page": page,
+        "size": size,
+        "total_flights": total_flights,
+        "returned": len(flights),
+        "flights": flights
+    }
 
 
-@router.get("/{flight_id}")
+@router.get(
+    "/{flight_id}",
+    response_model=FlightResponse
+)
 def get_flight(
     flight_id: int,
     db: Session = Depends(get_db),
@@ -101,7 +132,10 @@ def get_flight(
     return flight
 
 
-@router.put("/{flight_id}")
+@router.put(
+    "/{flight_id}",
+    response_model=FlightResponse
+)
 def update_flight(
     flight_id: int,
     request: FlightCreate,
