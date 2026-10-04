@@ -7,17 +7,17 @@ from app.schemas.aircraft import AircraftCreate
 from app.auth.dependencies import get_current_user
 from fastapi import HTTPException
 
-router = APIRouter(
-    prefix="/api/aircraft",
-    tags=["Aircraft"]
-)
+router = APIRouter(prefix="/api/aircraft", tags=["Aircraft"])
 
 
-@router.post("/")
+from fastapi import status
+
+
+@router.post("/", status_code=status.HTTP_201_CREATED)
 def create_aircraft(
     request: AircraftCreate,
     db: Session = Depends(get_db),
-    current_user: int = Depends(get_current_user)
+    current_user: int = Depends(get_current_user),
 ):
 
     aircraft = Aircraft(
@@ -26,7 +26,7 @@ def create_aircraft(
         model=request.model,
         aircraft_type=request.aircraft_type,
         engine_type=request.engine_type,
-        owner_id=current_user
+        owner_id=current_user,
     )
 
     db.add(aircraft)
@@ -35,64 +35,52 @@ def create_aircraft(
 
     return aircraft
 
+
 @router.get("/")
 def get_aircraft(
-    db: Session = Depends(get_db),
-    current_user: int = Depends(get_current_user)
+    db: Session = Depends(get_db), current_user: int = Depends(get_current_user)
 ):
 
-    aircraft = (
-        db.query(Aircraft)
-        .filter(Aircraft.owner_id == current_user)
-        .all()
-    )
+    aircraft = db.query(Aircraft).filter(Aircraft.owner_id == current_user).all()
 
     return aircraft
+
+
 @router.get("/{aircraft_id}")
 def get_aircraft_by_id(
     aircraft_id: int,
     db: Session = Depends(get_db),
-    current_user: int = Depends(get_current_user)
+    current_user: int = Depends(get_current_user),
 ):
 
     aircraft = (
         db.query(Aircraft)
-        .filter(
-            Aircraft.aircraft_id == aircraft_id,
-            Aircraft.owner_id == current_user
-        )
+        .filter(Aircraft.aircraft_id == aircraft_id, Aircraft.owner_id == current_user)
         .first()
     )
 
     if aircraft is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Aircraft not found."
-        )
+        raise HTTPException(status_code=404, detail="Aircraft not found.")
 
     return aircraft
+
+
 @router.put("/{aircraft_id}")
 def update_aircraft(
     aircraft_id: int,
     request: AircraftCreate,
     db: Session = Depends(get_db),
-    current_user: int = Depends(get_current_user)
+    current_user: int = Depends(get_current_user),
 ):
 
     aircraft = (
         db.query(Aircraft)
-        .filter(
-            Aircraft.aircraft_id == aircraft_id,
-            Aircraft.owner_id == current_user
-        )
+        .filter(Aircraft.aircraft_id == aircraft_id, Aircraft.owner_id == current_user)
         .first()
     )
 
     if aircraft is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Aircraft not found."
-        )
+        raise HTTPException(status_code=404, detail="Aircraft not found.")
 
     aircraft.registration = request.registration
     aircraft.manufacturer = request.manufacturer
@@ -105,31 +93,24 @@ def update_aircraft(
 
     return aircraft
 
+
 @router.delete("/{aircraft_id}")
 def delete_aircraft(
     aircraft_id: int,
     db: Session = Depends(get_db),
-    current_user: int = Depends(get_current_user)
+    current_user: int = Depends(get_current_user),
 ):
 
     aircraft = (
         db.query(Aircraft)
-        .filter(
-            Aircraft.aircraft_id == aircraft_id,
-            Aircraft.owner_id == current_user
-        )
+        .filter(Aircraft.aircraft_id == aircraft_id, Aircraft.owner_id == current_user)
         .first()
     )
 
     if aircraft is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Aircraft not found."
-        )
+        raise HTTPException(status_code=404, detail="Aircraft not found.")
 
     db.delete(aircraft)
     db.commit()
 
-    return {
-        "message": "Aircraft deleted successfully."
-    }
+    return {"message": "Aircraft deleted successfully."}

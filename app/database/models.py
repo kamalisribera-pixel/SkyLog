@@ -6,17 +6,9 @@ from app.database.database import Base
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    DateTime,
-    Date,
-    Float,
-    Text,
-    ForeignKey
-)
+from sqlalchemy import Column, Integer, String, DateTime, Date, Float, Text, ForeignKey
 from datetime import datetime
+
 
 class User(Base):
     __tablename__ = "users"
@@ -32,9 +24,7 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     updated_at = Column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now()
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
 
@@ -53,28 +43,17 @@ class Aircraft(Base):
 
     engine_type = Column(String, nullable=False)
 
-    owner_id = Column(
-        Integer,
-        ForeignKey("users.user_id"),
-        nullable=False
-    )
+    owner_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+
 
 class Flight(Base):
     __tablename__ = "flights"
 
     flight_id = Column(Integer, primary_key=True, index=True)
 
-    owner_id = Column(
-        Integer,
-        ForeignKey("users.user_id"),
-        nullable=False
-    )
+    owner_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
 
-    aircraft_id = Column(
-        Integer,
-        ForeignKey("aircraft.aircraft_id"),
-        nullable=False
-    )
+    aircraft_id = Column(Integer, ForeignKey("aircraft.aircraft_id"), nullable=False)
 
     flight_date = Column(Date, nullable=False)
 
@@ -90,7 +69,4 @@ class Flight(Base):
 
     remarks = Column(Text)
 
-    created_at = Column(
-        DateTime(timezone=True),
-        default=datetime.utcnow
-    )
+    created_at = Column(DateTime(timezone=True), default=datetime.utcnow)

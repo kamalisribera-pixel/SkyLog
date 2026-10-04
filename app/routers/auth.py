@@ -12,31 +12,24 @@ from app.auth.hashing import verify_password
 
 from app.auth.jwt_handler import create_access_token
 
-router = APIRouter(
-    prefix="/api/auth",
-    tags=["Authentication"]
-)
+router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
 
-@router.post("/register")
+from fastapi import status
+
+
+@router.post("/register", status_code=status.HTTP_201_CREATED)
 def register(request: RegisterRequest, db: Session = Depends(get_db)):
 
-    existing_user = (
-        db.query(User)
-        .filter(User.email == request.email)
-        .first()
-    )
+    existing_user = db.query(User).filter(User.email == request.email).first()
 
     if existing_user:
-        raise HTTPException(
-            status_code=400,
-            detail="Email already registered."
-        )
+        raise HTTPException(status_code=400, detail="Email already registered.")
 
     user = User(
         name=request.name,
         email=request.email,
-        password_hash=hash_password(request.password)
+        password_hash=hash_password(request.password),
     )
 
     db.add(user)
@@ -47,53 +40,29 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
         "message": "User registered successfully!",
         "user_id": user.user_id,
         "name": user.name,
-        "email": user.email
+        "email": user.email,
     }
+
 
 @router.post("/login")
-def login(
-    request: LoginRequest,
-    db: Session = Depends(get_db)
-):
+def login(request: LoginRequest, db: Session = Depends(get_db)):
 
-    user = (
-        db.query(User)
-        .filter(User.email == request.email)
-        .first()
-    )
+    user = db.query(User).filter(User.email == request.email).first()
 
     if not user:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid email or password."
-        )
+        raise HTTPException(status_code=401, detail="Invalid email or password.")
 
-    if not verify_password(
-        request.password,
-        user.password_hash
-    ):
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid email or password."
-        )
+    if not verify_password(request.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="Invalid email or password.")
 
-    access_token = create_access_token(
-        {
-            "sub": str(user.user_id)
-        }
-    )
+    access_token = create_access_token({"sub": str(user.user_id)})
 
-    return {
-        "access_token": access_token,
-        "token_type": "bearer"
-    }
+    return {"access_token": access_token, "token_type": "bearer"}
+
 
 from app.auth.dependencies import get_current_user
 
 
 @router.get("/me")
 def get_me(current_user=Depends(get_current_user)):
-    return {
-        "message": "Authenticated!",
-        "user": current_user
-    }
+    return {"message": "Authenticated!", "user": current_user}

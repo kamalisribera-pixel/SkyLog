@@ -1,0 +1,362 @@
+:root {
+  --bg: #08121e;
+  --surface: #0c1828;
+  --card: #101b2d;
+  --card-hover: #16263d;
+
+  --border: #22384e;
+
+  --primary: #4cc9ff;
+  --primary-hover: #74d8ff;
+
+  --success: #2ecc71;
+  --danger: #ff6b6b;
+
+  --text: #f8fafc;
+  --muted: #9baec1;
+}
+
+/* ==========================
+   APP
+========================== */
+
+.stApp,
+[data-testid="stAppViewContainer"] {
+  background: var(--bg);
+
+  color: var(--text);
+
+  font-family: "Segoe UI", sans-serif;
+}
+
+.block-container {
+  max-width: 1200px;
+
+  padding-top: 2rem;
+}
+
+/* ==========================
+   HIDE STREAMLIT UI
+========================== */
+
+header[data-testid="stHeader"] {
+  background: transparent;
+}
+
+#MainMenu,
+footer {
+  visibility: hidden;
+}
+
+/* ==========================
+   TYPOGRAPHY
+========================== */
+
+h1,
+h2,
+h3 {
+  color: var(--text);
+
+  font-weight: 700;
+}
+
+h1 {
+  color: var(--primary);
+}
+
+/* ==========================
+   SIDEBAR
+========================== */
+
+[data-testid="stSidebar"] {
+  background: var(--surface);
+
+  border-right: 1px solid var(--border);
+}
+
+[data-testid="stSidebar"] * {
+  color: var(--text);
+}
+
+/* ==========================
+   DASHBOARD METRICS
+========================== */
+
+[data-testid="stMetric"] {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  padding: 20px;
+}
+
+[data-testid="stMetricLabel"] {
+  color: var(--muted) !important;
+}
+
+[data-testid="stMetricValue"] {
+  color: var(--primary) !important;
+}
+
+/* ==========================
+   CARDS
+========================== */
+
+.stContainer {
+  background: var(--card);
+}
+
+[data-testid="stVerticalBlockBorderWrapper"] {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+}
+
+/* ==========================
+   BUTTONS
+========================== */
+
+.stButton button {
+  background: var(--primary);
+
+  color: var(--bg);
+
+  border: none;
+
+  border-radius: 12px;
+
+  font-weight: 700;
+
+  min-height: 45px;
+}
+
+.stButton button:hover {
+  background: var(--primary-hover);
+}
+
+/* ==========================
+   INPUTS
+========================== */
+
+input,
+textarea,
+[data-baseweb="select"] > div {
+  background: var(--card) !important;
+
+  color: var(--text) !important;
+
+  border: 1px solid var(--border) !important;
+}
+
+label {
+  color: var(--text) !important;
+
+  font-weight: 600;
+}
+
+/* ==========================
+   FLIGHT LOG CARDS
+========================== */
+
+.flight-card {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  padding: 20px;
+
+  margin-bottom: 15px;
+}
+
+.flight-card:hover {
+  border-color: var(--primary);
+}
+
+/* ==========================
+   AIRCRAFT CARDS
+========================== */
+
+.aircraft-card {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  padding: 20px;
+}
+
+/* ==========================
+   DIVIDERS
+========================== */
+
+hr {
+  border-color: var(--border) !important;
+}
+
+/* Sidebar menu button */
+
+[data-testid="collapsedControl"] button {
+  background: var(--card) !important;
+
+  color: var(--primary) !important;
+
+  border: 1px solid var(--border) !important;
+}
+
+[data-testid="collapsedControl"] svg {
+  fill: var(--primary) !important;
+}
+
+.aircraft-card {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  padding: 20px;
+
+  margin-bottom: 15px;
+}
+
+.aircraft-card h3 {
+  color: var(--primary);
+}
+
+.aircraft-card:hover {
+  border-color: var(--primary);
+
+  transform: translateY(-3px);
+}
+
+.flight-card {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  margin-bottom: 18px;
+}
+
+.flight-card h3 {
+  color: var(--primary);
+}
+
+.flight-card:hover {
+  border-color: var(--primary);
+}
+
+/* ===========================
+   STREAMLIT NAVIGATION BUTTON
+=========================== */
+
+/* Top left hamburger container */
+
+[data-testid="collapsedControl"] {
+  background: var(--card) !important;
+
+  border: 1px solid var(--border) !important;
+
+  border-radius: 12px !important;
+
+  margin: 10px !important;
+
+  z-index: 9999 !important;
+}
+
+/* Button itself */
+
+[data-testid="collapsedControl"] button {
+  background: var(--card) !important;
+
+  border: none !important;
+
+  border-radius: 12px !important;
+}
+
+/* Hamburger icon */
+
+[data-testid="collapsedControl"] svg {
+  color: var(--primary) !important;
+
+  fill: var(--primary) !important;
+}
+
+/* Hover */
+
+[data-testid="collapsedControl"]:hover {
+  background: var(--card-hover) !important;
+
+  border-color: var(--primary) !important;
+}
+
+/* ===========================
+   LOGIN TABS
+=========================== */
+
+/* Tab container */
+
+[data-baseweb="tab-list"] {
+  background: var(--card) !important;
+
+  border: 1px solid var(--border) !important;
+
+  border-radius: 14px !important;
+
+  padding: 5px !important;
+}
+
+/* Tab text */
+
+[data-baseweb="tab"] {
+  color: var(--muted) !important;
+
+  font-weight: 700 !important;
+
+  background: transparent !important;
+}
+
+/* Active tab */
+
+[data-baseweb="tab"][aria-selected="true"] {
+  background: var(--primary) !important;
+
+  color: var(--bg) !important;
+
+  border-radius: 10px !important;
+}
+
+/* Tab hover */
+
+[data-baseweb="tab"]:hover {
+  color: var(--text) !important;
+}
+
+/* Tab arrows / overflow buttons */
+
+[data-baseweb="tab-list"] button {
+  color: var(--primary) !important;
+
+  background: var(--card) !important;
+}
+
+[data-baseweb="tab-list"] svg {
+  fill: var(--primary) !important;
+}
+
+/* Login text */
+
+.stTextInput label,
+.stTabs label {
+  color: var(--text) !important;
+}
